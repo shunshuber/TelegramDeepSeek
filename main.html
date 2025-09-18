@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учим HTML и CSS вместе!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30"><circle cx="12" cy="12" r="10" fill="black"/><circle cx="12" cy="12" r="8" fill="white"/></svg>') 12 12, auto;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: white;
+            color: black;
+            line-height: 1.6;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: black;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        nav {
+            background-color: #333;
+            padding: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, button:hover, .lesson-card:hover {
+            background-color: white;
+            color: black;
+            border-color: black;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .intro h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .lessons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .lesson-card {
+            background-color: #f0f0f0;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .lesson-content {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .active {
+            display: block;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            border: 2px solid black;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            margin-top: 1rem;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .code-example {
+            background-color: #e0e0e0;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .lessons-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .lesson-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Специальный курсор для интерактивных элементов */
+        a, button, .lesson-card {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="36" viewBox="0 0 30 36"><circle cx="15" cy="15" r="12" fill="black"/><circle cx="15" cy="15" r="10" fill="white"/><circle cx="15" cy="15" r="6" fill="black"/></svg>') 15 15, auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">✨ HTML & CSS для детей!</div>
+        <p>Учимся создавать сайты весело и просто!</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#lesson1">Урок 1</a></li>
+            <li><a href="#lesson2">Урок 2</a></li>
+            <li><a href="#lesson3">Урок 3</a></li>
+            <li><a href="#lesson4">Урок 4</a></li>
+            <li><a href="#lesson5">Урок 5</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section class="intro">
+            <h2>Привет, будущий программист!</h2>
+            <p>Этот сайт поможет тебе изучить основы HTML и CSS. Здесь ты найдешь простые объяснения и веселые примеры!</p>
+        </section>
+        
+        <section class="lessons-container">
+            <article class="lesson-card" id="lesson1">
+                <h3>Урок 1: Что такое HTML?</h3>
+                <p>HTML - это язык, который помогает создавать структуру сайта.</p>
+                <div class="lesson-content">
+                    <p>HTML состоит из тегов, которые говорят браузеру, как отображать контент.</p>
+                    <p>Например, тег &lt;h1&gt; создает заголовок, а тег &lt;p&gt; - абзац.</p>
+                    <div class="code-example">
+                        &lt;h1&gt;Мой первый сайт&lt;/h1&gt;<br>
+                        &lt;p&gt;Привет, мир!&lt;/p&gt;
+                    </div>
+                </div>
+                <button onclick="toggleLesson('lesson1')">Показать больше</button>
+            </article>
+            
+            <article class="lesson-card" id="lesson2">
+                <h3>Урок 2: Основные HTML-теги</h3>
+                <p>Давай изучим самые важные теги, которые используются в HTML.</p>
+                <div class="lesson-content">
+                    <p>Вот некоторые основные теги:</p>
+                    <ul>
+                        <li>&lt;h1&gt; - &lt;h6&gt;: заголовки разного уровня</li>
+                        <li>&lt;p&gt;: параграф (абзац текста)</li>
+                        <li>&lt;a&gt;: ссылка на другую страницу</li>
+                        <li>&lt;img&gt;: изображение</li>
+                        <li>&lt;div&gt;: контейнер для других элементов</li>
+                    </ul>
+                    <div class="code-example">
+                        &lt;h2&gt;Обо мне&lt;/h2&gt;<br>
+                        &lt;p&gt;Меня зовут Аня, мне 9 лет.&lt;/p&gt;<br>
+                        &lt;img src="my_photo.jpg" alt="Мое фото"&gt;
+                    </div>
+                </div>
+                <button onclick="toggleLesson('lesson2')">Показать больше</button>
+            </article>
+            
+            <article class="lesson-card" id="lesson3">
+                <h3>Урок 3: Что такое CSS?</h3>
+                <p>CSS - это язык, который делает HTML красивым!</p>
+                <div class="lesson-content">
+                    <p>С помощью CSS мы можем изменить цвета, шрифты, размеры и расположение элементов на странице.</p>
+                    <p>CSS состоит из селекторов и свойств. Селектор выбирает элемент, а свойства определяют его внешний вид.</p>
+                    <div class="code-example">
+                        h1 {<br>
+                        &nbsp;&nbsp;color: blue;<br>
+                        &nbsp;&nbsp;font-size: 24px;<br>
+                        }
+                    </div>
+                    <p>Этот код сделает все заголовки h1 синими и размером 24 пикселя.</p>
+                </div>
+                <button onclick="toggleLesson('lesson3')">Показать больше</button>
+            </article>
+            
+            <article class="lesson-card" id="lesson4">
+                <h3>Урок 4: Основные CSS-свойства</h3>
+                <p>Изучим самые полезные CSS-свойства для оформления сайта.</p>
+                <div class="lesson-content">
+                    <p>Вот некоторые важные свойства CSS:</p>
+                    <ul>
+                        <li>color: цвет текста</li>
+                        <li>background-color: цвет фона</li>
+                        <li>font-size: размер текста</li>
+                        <li>margin: внешние отступы</li>
+                        <li>padding: внутренние отступы</li>
+                        <li>border: граница элемента</li>
+                    </ul>
+                    <div class="code-example">
+                        p {<br>
+                        &nbsp;&nbsp;color: red;<br>
+                        &nbsp;&nbsp;background-color: yellow;<br>
+                        &nbsp;&nbsp;font-size: 18px;<br>
+                        &nbsp;&nbsp;padding: 10px;<br>
+                        }
+                    </div>
+                    <p>Этот код сделает все абзацы с красным текстом на желтом фоне с отступами.</p>
+                </div>
+                <button onclick="toggleLesson('lesson4')">Показать больше</button>
+            </article>
+            
+            <article class="lesson-card" id="lesson5">
+                <h3>Урок 5: Создаем свою первую страницу</h3>
+                <p>Давай соберем все вместе и создадим простую веб-страницу!</p>
+                <div class="lesson-content">
+                    <p>1. Создай новый файл с расширением .html</p>
+                    <p>2. Добавь базовую структуру HTML:</p>
+                    <div class="code-example">
+                        &lt;!DOCTYPE html&gt;<br>
+                        &lt;html&gt;<br>
+                        &lt;head&gt;<br>
+                        &nbsp;&nbsp;&lt;title&gt;Мой сайт&lt;/title&gt;<br>
+                        &nbsp;&nbsp;&lt;style&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;/* Твои стили CSS здесь */<br>
+                        &nbsp;&nbsp;&lt;/style&gt;<br>
+                        &lt;/head&gt;<br>
+                        &lt;body&gt;<br>
+                        &nbsp;&nbsp;&lt;h1&gt;Добро пожаловать!&lt;/h1&gt;<br>
+                        &nbsp;&nbsp;&lt;p&gt;Это моя первая страница.&lt;/p&gt;<br>
+                        &lt;/body&gt;<br>
+                        &lt;/html&gt;
+                    </div>
+                    <p>3. Добавь CSS в тег &lt;style&gt;, чтобы сделать страницу красивой!</p>
+                    <p>4. Открой файл в браузере и посмотри на результат!</p>
+                </div>
+                <button onclick="toggleLesson('lesson5')">Показать больше</button>
+            </article>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Удачи в изучении HTML и CSS! Помни: программирование - это весело!</p>
+        <p>© 2023 HTML & CSS для детей</p>
+    </footer>
+
+    <script>
+        function toggleLesson(lessonId) {
+            const lessonContent = document.getElementById(lessonId).querySelector('.lesson-content');
+            const button = document.getElementById(lessonId).querySelector('button');
+            
+            if (lessonContent.classList.contains('active')) {
+                lessonContent.classList.remove('active');
+                button.textContent = 'Показать больше';
+            } else {
+                // Сначала скроем все открытые уроки
+                document.querySelectorAll('.lesson-content.active').forEach(item => {
+                    item.classList.remove('active');
+                    item.parentElement.querySelector('button').textContent = 'Показать больше';
+                });
+                
+                // Показываем выбранный урок
+                lessonContent.classList.add('active');
+                button.textContent = 'Скрыть';
+                
+                // Плавная прокрутка к элементу
+                lessonContent.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+    </script>
+</body>
+</html>
